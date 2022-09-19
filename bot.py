@@ -2,6 +2,7 @@
 
 import os
 from dotenv import load_dotenv
+import random
 import discord
 from discord.utils import get
 from discord.ext import commands
@@ -16,6 +17,25 @@ intents.message_content = True
 intents.members = True
 
 client = discord.Client(intents=intents)
+
+ball_color_options = {
+    "🔵": "#55acee",  # blue
+    "🟣": "#aa8ed6",  # purple
+    "🔴": "#dd2e44",  # red
+    "🟠": "#f4900c",  # orange
+    "🟡": "#fdcb58"   # yellow
+}
+
+# ball sizing info
+width = 1000
+height = 300
+maxN = 700
+maxR = 40
+
+
+def create_ball(color):
+    return "<circle cx = " + str(random.random() * width) + " cy = " + str(random.random() * height) + " r = " + str(random.random() * maxR + 10) + " fill = " + color + "></circle>"
+
 
 messages = [
     "Ready to fight? 🤜👊🤛 We're asking the controversial questions here at DEX. React to the polls with the emoji that indicates your preference and see the results at https://bit.ly/sort-the-madness",
@@ -53,21 +73,26 @@ Podcasts (🟠)
 Silence (🟡)"""
 ]
 
-poll_message_info = [{"time": "intro", "sent": False, "reactions": {}, "text": messages[0]},
-                     {"time": "9am", "sent": False, "reactions": {
-                         '🔵': 0, '🟣': 0}, "text": messages[1]},
-                     {"time": "10am", "sent": False, "reactions": {
-                         '🔵': 0, '🟣': 0, '🔴': 0, '🟠': 0}, "text": messages[2]},
-                     {"time": "11am", "sent": False, "reactions": {
-                         '🔵': 0, '🟣': 0, '🔴': 0}, "text": messages[3]},
-                     {"time": "12pm", "sent": False, "reactions": {
-                         '🔵': 0, '🟣': 0, '🔴': 0, '🟠': 0, '🟡': 0}, "text": messages[4]},
-                     {"time": "1pm", "sent": False, "reactions": {
-                         '🔵': 0, '🟣': 0, '🔴': 0, '🟠': 0, '🟡': 0}, "text": messages[5]},
-                     {"time": "2pm", "sent": False, "reactions": {
+gist_data = [
+    {"balls": []}, {"balls": []}, {"balls": []}, {
+        "balls": []}, {"balls": []}, {"balls": []}, {}, {"balls": []}
+]
+
+poll_message_info = [{"index": 0, "time": "intro", "sent": False, "reactions": {}, "text": messages[0], "balls": []},
+                     {"index": 1, "time": "9am", "sent": False, "reactions": {
+                         '🔵': 0, '🟣': 0}, "text": messages[1], "balls": []},
+                     {"index": 2, "time": "10am", "sent": False, "reactions": {
+                         '🔵': 0, '🟣': 0, '🔴': 0, '🟠': 0}, "text": messages[2], "balls": []},
+                     {"index": 3, "time": "11am", "sent": False, "reactions": {
+                         '🔵': 0, '🟣': 0, '🔴': 0}, "text": messages[3], "balls": []},
+                     {"index": 4, "time": "12pm", "sent": False, "reactions": {
+                         '🔵': 0, '🟣': 0, '🔴': 0, '🟠': 0, '🟡': 0}, "text": messages[4], "balls": []},
+                     {"index": 5, "time": "1pm", "sent": False, "reactions": {
+                         '🔵': 0, '🟣': 0, '🔴': 0, '🟠': 0, '🟡': 0}, "text": messages[5], "balls": []},
+                     {"index": 6, "time": "2pm", "sent": False, "reactions": {
                          '🔵': 0, '🟣': 0, '🔴': 0, '🟠': 0}, "text": messages[6]},
-                     {"time": "3pm", "sent": False, "reactions": {
-                         '🔵': 0, '🟣': 0, '🔴': 0, '🟠': 0, '🟡': 0}, "text": messages[7]}
+                     {"index": 7, "time": "3pm", "sent": False, "reactions": {
+                         '🔵': 0, '🟣': 0, '🔴': 0, '🟠': 0, '🟡': 0}, "text": messages[7], "balls": []}
                      ]
 poll_message_ids_to_info = {}
 
@@ -109,7 +134,7 @@ async def on_message(message):
             return
 
         this_poll_info["sent"] = True
-        sent_message = await message.channel.send(content=this_poll_info['text'], delete_after=3600)
+        sent_message = await message.channel.send(content=this_poll_info['text'])
         this_poll_info['id'] = sent_message.id
         poll_message_ids_to_info[sent_message.id] = this_poll_info
 
@@ -121,12 +146,21 @@ async def on_message(message):
 async def on_raw_reaction_add(payload):
     if payload.message_id in poll_message_ids_to_info.keys() and payload.member.id != 1017216995575463986:  # if not done by the bot
         emoji = payload.emoji.name
-        reactions = poll_message_ids_to_info[payload.message_id]['reactions']
+        poll_info = poll_message_ids_to_info[payload.message_id]
+        reactions = poll_info['reactions']
         if emoji in reactions.keys():
             print('received valid reaction')
             reactions[emoji] += 1
-            print(reactions[emoji])
-            await write_reactions_to_gist()
+            balls = poll_info['balls']
+            balls.append(create_ball(ball_color_options[emoji]))
+            print(balls)
+
+            gist_data[poll_info['index']]["balls"] = balls
+            gist_data[poll_info['index']][emoji] = reactions[emoji]
+
+            print(gist_data)
+
+            await write_reactions_to_gist(gist_data)
             # channel = client.get_channel(payload.channel_id)
             # message = await channel.fetch_message(payload.message_id)
             # reaction = get(message.reactions, emoji=payload.emoji.name)
@@ -152,13 +186,13 @@ async def on_raw_reaction_remove(payload):
         #         await message.delete()
 
 
-async def write_reactions_to_gist():
+async def write_reactions_to_gist(gist_data):
     url = os.environ['GIST_URL']
     headers = {'Authorization': 'token %s' % os.environ['GH_TOKEN']}
     params = {'scope': 'gist'}
 
     payload = {"description": "DEX 2022 bot data", "public": False, "files": {"dex-2022-bot-data.json": {
-        "content": json.dumps(poll_message_info)}}}
+        "content": json.dumps(gist_data)}}}
 
     # make a requests
     res = requests.patch(url, headers=headers, params=params,
@@ -175,6 +209,7 @@ async def write_reactions_to_gist():
     #     print("Gist URL : %s" % (j['url']))
     #     print("GIST ID: %s" % (j['id']))
 
+
 # @commands.command(name="poll")
 # async def poll(self, ctx: commands.Context, arg1, arg2):
 #     arg3 = int(arg2)/3600
@@ -189,7 +224,6 @@ async def write_reactions_to_gist():
 #     await message.add_reaction("✅")
 #     await message.add_reaction("❌")
 #     # time.sleep(int(arg2))
-
 # @client.event
 # async def on_raw_reaction_add(ctx):
 #     if ctx.emoji.name == "✅":
@@ -197,6 +231,5 @@ async def write_reactions_to_gist():
 #         message = await channel.fetch_message(ctx.message_id)
 #         reaction = get(message.reactions, emoji=ctx.emoji.name)
 #         COUNT = reaction.count
-
 client.run(
     os.environ['BOT_LOGIN_TOKEN'])
