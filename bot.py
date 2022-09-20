@@ -1,11 +1,12 @@
-# This example requires the 'message_content' intent.
-
 import os
+import uuid
 from dotenv import load_dotenv
 import random
 import discord
 from discord.utils import get
 from discord.ext import commands
+
+from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient, __version__
 
 import requests
 import json
@@ -187,27 +188,35 @@ async def on_raw_reaction_remove(payload):
 
 
 async def write_reactions_to_gist(gist_data):
-    url = os.environ['GIST_URL']
-    headers = {'Authorization': 'token %s' % os.environ['GH_TOKEN']}
-    params = {'scope': 'gist'}
+    # url = os.environ['GIST_URL']
+    # headers = {'Authorization': 'token %s' % os.environ['GH_TOKEN']}
+    # params = {'scope': 'gist'}
 
-    payload = {"description": "DEX 2022 bot data", "public": False, "files": {"dex-2022-bot-data.json": {
-        "content": json.dumps(gist_data)}}}
+    # payload = {"description": "DEX 2022 bot data", "public": False, "files": {"dex-2022-bot-data.json": {
+    #     "content": json.dumps(gist_data)}}}
 
-    # make a requests
-    res = requests.patch(url, headers=headers, params=params,
-                         data=json.dumps(payload))
+    # # make a requests
+    # res = requests.patch(url, headers=headers, params=params,
+    #                      data=json.dumps(payload))
 
-    # print response --> JSON
-    print(res.status_code)
-    # print(res.url)
-    # print(res.text)
-    # j = json.loads(res.text)
+    # print(res.status_code)
 
-    # # Print created GIST's details
-    # for gist in range(len(j)):
-    #     print("Gist URL : %s" % (j['url']))
-    #     print("GIST ID: %s" % (j['id']))
+    try:
+        connect_str = os.environ['AZURE_STORAGE_CONNECTION_STRING']
+        container_name = "ball-data"
+        file_name = "gist-data.json"
+
+        blob_service_client = BlobServiceClient.from_connection_string(
+            connect_str)
+
+        blob_client = blob_service_client.get_blob_client(
+            container=container_name, blob=file_name)
+
+        blob_client.upload_blob(data=json.dumps(gist_data), overwrite=True)
+
+    except Exception as ex:
+        print('Exception:')
+        print(ex)
 
 
 # @commands.command(name="poll")
