@@ -101,6 +101,8 @@ poll_message_ids_to_info = {}
 @client.event
 async def on_ready():
     print(f'We have logged in as {client.user}')
+    print(f'{client.user.name} has connected to Discord!')
+    print(client.guilds)
 
 
 @client.event
