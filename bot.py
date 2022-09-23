@@ -54,8 +54,8 @@ def create_ball(color):
     r = random.random() * maxR + minR
     potential_x = random.random() * width
     potential_y = random.random() * height
-    cx = potential_x - r if width/2 else potential_x + r
-    cy = potential_y - r if height/2 else potential_y + r
+    cx = potential_x - r if potential_x > width/2 else potential_x + r
+    cy = potential_y - r if potential_y > height/2 else potential_y + r
     return "<circle cx = " + str(cx) + " cy = " + str(cy) + " r = " + str(r) + " fill = " + color + "></circle>"
 
 
