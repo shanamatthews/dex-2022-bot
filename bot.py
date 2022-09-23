@@ -20,11 +20,27 @@ intents.members = True
 client = discord.Client(intents=intents)
 
 ball_color_options = {
-    "🔵": "#55acee",  # blue
-    "🟣": "#aa8ed6",  # purple
-    "🔴": "#dd2e44",  # red
-    "🟠": "#f4900c",  # orange
-    "🟡": "#fdcb58"   # yellow
+    "dexpurple": "#592DA2",  # purple
+    "dexpink": "#CD56DC",  # pink
+    "dexred": "#F61D5A",  # red
+    "dexorange": "#FF7C3F",  # orange
+    "dexyellow": "#F4CD01"   # yellow
+}
+
+custom_emojis = {
+    "dexpurple": "<:dexpurple:1022633996313698305>",
+    "dexpink": "<:dexpink:1022633997626507284>",
+    "dexred": "<:dexred:1022633998872215562>",
+    "dexorange": "<:dexorange:1022634000948416514>",
+    "dexyellow": "<:dexyellow:1022634000050827304>"
+}
+
+custom_emojis_reverse = {
+    "<:dexpurple:1022633996313698305>": "purple",
+    "<:dexpink:1022633997626507284>": "pink",
+    "<:dexred:1022633998872215562>": "red",
+    "<:dexorange:1022634000948416514>": "orange",
+    "<:dexyellow:1022634000050827304>": "yellow"
 }
 
 # ball sizing info
@@ -41,37 +57,37 @@ def create_ball(color):
 messages = [
     "Ready to fight? 🤜👊🤛 We're asking the controversial questions here at DEX. React to the polls with the emoji that indicates your preference and see the results at https://bit.ly/sort-the-madness",
     """The age old question...
-Tabs (🔵) or Spaces (🟣)?""",
+Tabs (""" + custom_emojis["dexpurple"] + """) or Spaces(""" + custom_emojis["dexpink"] + """)?""",
     """What editor will you throw down for?
-Emacs (🔵)
-Vim (🟣)
-JetBrains (🔴)
-Notepad (🟠)""",
+Emacs (""" + custom_emojis["dexpurple"] + """)
+Vim (""" + custom_emojis["dexpink"] + """)
+JetBrains (""" + custom_emojis["dexred"] + """)
+Notepad (""" + custom_emojis["dexorange"] + """)""",
     """Best OS?
-Windows (🔵), MacOS (🟣) or Linux (🔴)""",
+Windows (""" + custom_emojis["dexpurple"] + """), MacOS (""" + custom_emojis["dexpink"] + """) or Linux (""" + custom_emojis["dexred"] + """)""",
     """Preferred cloud?
-AWS (🔵)
-Azure (🟣)
-GCP (🔴)
-IBM (🟠)
-My own servers (🟡)""",
+AWS (""" + custom_emojis["dexpurple"] + """)
+Azure (""" + custom_emojis["dexpink"] + """)
+GCP (""" + custom_emojis["dexred"] + """)
+IBM (""" + custom_emojis["dexorange"] + """)
+My own servers (""" + custom_emojis["dexyellow"] + """)""",
     """Best web framework?
-Next.js (🔵)
-React (🟣)
-Flask (🔴)
-FastAPI (🟠)
-Svelte (🟡)""",
+Next.js (""" + custom_emojis["dexpurple"] + """)
+React (""" + custom_emojis["dexpink"] + """)
+Flask (""" + custom_emojis["dexred"] + """)
+FastAPI (""" + custom_emojis["dexorange"] + """)
+Svelte (""" + custom_emojis["dexyellow"] + """)""",
     """Most important keyboard attribute?
-Mechanical (🔵)
-Split (🟣)
-Backlit (🔴)
-It's my laptop (🟠)""",
+Mechanical (""" + custom_emojis["dexpurple"] + """)
+Split (""" + custom_emojis["dexpink"] + """)
+Backlit (""" + custom_emojis["dexred"] + """)
+It's my laptop (""" + custom_emojis["dexorange"] + """)""",
     """Favorite music for coding?
-Lofi (🔵)
-Classical (🟣)
-Ambient (🔴)
-Podcasts (🟠)
-Silence (🟡)"""
+Lofi (""" + custom_emojis["dexpurple"] + """)
+Classical (""" + custom_emojis["dexpink"] + """)
+Ambient (""" + custom_emojis["dexred"] + """)
+Podcasts (""" + custom_emojis["dexorange"] + """)
+Silence (""" + custom_emojis["dexyellow"] + """)"""
 ]
 
 gist_data = [
@@ -81,19 +97,19 @@ gist_data = [
 
 poll_message_info = [{"index": 0, "time": "intro", "sent": False, "reactions": {}, "text": messages[0], "balls": []},
                      {"index": 1, "time": "9am", "sent": False, "reactions": {
-                         '🔵': 0, '🟣': 0}, "text": messages[1], "balls": []},
+                         custom_emojis["dexpurple"]: 0, custom_emojis["dexpink"]: 0}, "text": messages[1], "balls": []},
                      {"index": 2, "time": "10am", "sent": False, "reactions": {
-                         '🔵': 0, '🟣': 0, '🔴': 0, '🟠': 0}, "text": messages[2], "balls": []},
+                         custom_emojis["dexpurple"]: 0, custom_emojis["dexpink"]: 0, custom_emojis["dexred"]: 0, custom_emojis["dexorange"]: 0}, "text": messages[2], "balls": []},
                      {"index": 3, "time": "11am", "sent": False, "reactions": {
-                         '🔵': 0, '🟣': 0, '🔴': 0}, "text": messages[3], "balls": []},
+                         custom_emojis["dexpurple"]: 0, custom_emojis["dexpink"]: 0, custom_emojis["dexred"]: 0}, "text": messages[3], "balls": []},
                      {"index": 4, "time": "12pm", "sent": False, "reactions": {
-                         '🔵': 0, '🟣': 0, '🔴': 0, '🟠': 0, '🟡': 0}, "text": messages[4], "balls": []},
+                         custom_emojis["dexpurple"]: 0, custom_emojis["dexpink"]: 0, custom_emojis["dexred"]: 0, custom_emojis["dexorange"]: 0, custom_emojis["dexyellow"]: 0}, "text": messages[4], "balls": []},
                      {"index": 5, "time": "1pm", "sent": False, "reactions": {
-                         '🔵': 0, '🟣': 0, '🔴': 0, '🟠': 0, '🟡': 0}, "text": messages[5], "balls": []},
+                         custom_emojis["dexpurple"]: 0, custom_emojis["dexpink"]: 0, custom_emojis["dexred"]: 0, custom_emojis["dexorange"]: 0, custom_emojis["dexyellow"]: 0}, "text": messages[5], "balls": []},
                      {"index": 6, "time": "2pm", "sent": False, "reactions": {
-                         '🔵': 0, '🟣': 0, '🔴': 0, '🟠': 0}, "text": messages[6]},
+                         custom_emojis["dexpurple"]: 0, custom_emojis["dexpink"]: 0, custom_emojis["dexred"]: 0, custom_emojis["dexorange"]: 0}, "text": messages[6]},
                      {"index": 7, "time": "3pm", "sent": False, "reactions": {
-                         '🔵': 0, '🟣': 0, '🔴': 0, '🟠': 0, '🟡': 0}, "text": messages[7], "balls": []}
+                         custom_emojis["dexpurple"]: 0, custom_emojis["dexpink"]: 0, custom_emojis["dexred"]: 0, custom_emojis["dexorange"]: 0, custom_emojis["dexyellow"]: 0}, "text": messages[7], "balls": []}
                      ]
 poll_message_ids_to_info = {}
 
@@ -104,8 +120,19 @@ async def on_ready():
     print(f'{client.user.name} has connected to Discord!')
     print(client.guilds)
 
+    # custom_emojis["dexpurple"] = client.get_emoji(
+    #     1022633996313698305)  # dexpurple
+    # custom_emojis["dexpink"] = client.get_emoji(
+    #     1022633997626507284)  # dexpink
+    # custom_emojis["dexred"] = client.get_emoji(
+    #     1022633998872215562)  # dexred
+    # custom_emojis["dexorange"] = client.get_emoji(
+    #     1022634000948416514)  # dexorange
+    # custom_emojis["dexyellow"] = client.get_emoji(
+    #     1022634000050827304)  # dexyellow
 
-@client.event
+
+@ client.event
 async def on_message(message):
     if message.author.id != 446079130094534656:  # only works for Shana's account
         return
@@ -145,23 +172,25 @@ async def on_message(message):
             await sent_message.add_reaction(react)
 
 
-@client.event
+@ client.event
 async def on_raw_reaction_add(payload):
     if payload.message_id in poll_message_ids_to_info.keys() and payload.member.id != 1017216995575463986:  # if not done by the bot
         emoji = payload.emoji.name
+
         poll_info = poll_message_ids_to_info[payload.message_id]
         reactions = poll_info['reactions']
-        if emoji in reactions.keys():
+
+        full_emoji = custom_emojis[emoji]
+        if full_emoji in reactions.keys():
             print('received valid reaction')
-            reactions[emoji] += 1
+            reactions[full_emoji] += 1
             balls = poll_info['balls']
             balls.append(create_ball(ball_color_options[emoji]))
             print(balls)
 
             gist_data[poll_info['index']]["balls"] = balls
-            gist_data[poll_info['index']][emoji] = reactions[emoji]
-
-            print(gist_data)
+            gist_data[poll_info['index']
+                      ][custom_emojis_reverse[full_emoji]] = reactions[full_emoji]
 
             await write_reactions_to_gist(gist_data)
             # channel = client.get_channel(payload.channel_id)
@@ -171,7 +200,11 @@ async def on_raw_reaction_add(payload):
             #     await message.delete()
 
 
-@client.event
+def full_emoji_to_color_name(full_emoji):
+    return custom_emojis_reverse[full_emoji]
+
+
+@ client.event
 async def on_raw_reaction_remove(payload):
     if payload.message_id in poll_message_ids_to_info.keys():
         emoji = payload.emoji.name
@@ -215,6 +248,8 @@ async def write_reactions_to_gist(gist_data):
             container=container_name, blob=file_name)
 
         blob_client.upload_blob(data=json.dumps(gist_data), overwrite=True)
+
+        print(gist_data)
 
     except Exception as ex:
         print('Exception:')
