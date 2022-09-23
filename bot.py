@@ -46,16 +46,23 @@ custom_emojis_reverse = {
 # ball sizing info
 width = 1000
 height = 300
-maxN = 700
-maxR = 40
+maxR = 12
+minR = 9
 
 
 def create_ball(color):
-    return "<circle cx = " + str(random.random() * width) + " cy = " + str(random.random() * height) + " r = " + str(random.random() * maxR + 10) + " fill = " + color + "></circle>"
+    r = random.random() * maxR + minR
+    potential_x = random.random() * width
+    potential_y = random.random() * height
+    cx = potential_x - r if width/2 else potential_x + r
+    cy = potential_y - r if height/2 else potential_y + r
+    return "<circle cx = " + str(cx) + " cy = " + str(cy) + " r = " + str(r) + " fill = " + color + "></circle>"
 
 
 messages = [
-    "Ready to fight? 🤜👊🤛 We're asking the controversial questions here at DEX. React to the polls with the emoji that indicates your preference and see the results at https://bit.ly/sort-the-madness",
+    """Ready to fight? 🤜👊🤛
+We're asking the controversial questions here at DEX.
+React to the polls with the emoji that indicates your preference and see the results at https://bit.ly/sort-the-madness""",
     """The age old question...
 Tabs (""" + custom_emojis["dexpurple"] + """) or Spaces(""" + custom_emojis["dexpink"] + """)?""",
     """What editor will you throw down for?
