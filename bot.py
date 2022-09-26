@@ -193,13 +193,13 @@ async def on_raw_reaction_add(payload):
             reactions[full_emoji] += 1
             balls = poll_info['balls']
             balls.append(create_ball(ball_color_options[emoji]))
-            print(balls)
+            # print(balls)
 
             gist_data[poll_info['index']]["balls"] = balls
             gist_data[poll_info['index']
                       ][custom_emojis_reverse[full_emoji]] = reactions[full_emoji]
 
-            await write_reactions_to_gist(gist_data)
+            await write_reactions_to_gist(poll_info['index'], gist_data[poll_info['index']])
             # channel = client.get_channel(payload.channel_id)
             # message = await channel.fetch_message(payload.message_id)
             # reaction = get(message.reactions, emoji=payload.emoji.name)
@@ -219,7 +219,7 @@ async def on_raw_reaction_remove(payload):
         if emoji in reactions.keys():
             print('removed valid reaction')
             reactions[emoji] -= 1
-            print(reactions[emoji])
+            # print(reactions[emoji])
         # if payload.emoji.name == "🔁":
         #     print('got reaction')
         #     channel = client.get_channel(payload.channel_id)
@@ -229,7 +229,7 @@ async def on_raw_reaction_remove(payload):
         #         await message.delete()
 
 
-async def write_reactions_to_gist(gist_data):
+async def write_reactions_to_gist(index, new_data):
     # url = os.environ['GIST_URL']
     # headers = {'Authorization': 'token %s' % os.environ['GH_TOKEN']}
     # params = {'scope': 'gist'}
@@ -251,12 +251,25 @@ async def write_reactions_to_gist(gist_data):
         blob_service_client = BlobServiceClient.from_connection_string(
             connect_str)
 
+        container_client = blob_service_client.get_container_client(
+            container=container_name)
+
+        current_blob_data = json.loads(container_client.download_blob(
+            file_name).content_as_text())
+
+        print(current_blob_data[index])
+
+        current_blob_data[index] = new_data
+
+        print(current_blob_data[index])
+
         blob_client = blob_service_client.get_blob_client(
             container=container_name, blob=file_name)
 
-        blob_client.upload_blob(data=json.dumps(gist_data), overwrite=True)
+        blob_client.upload_blob(data=json.dumps(
+            current_blob_data), overwrite=True)
 
-        print(gist_data)
+        # print(gist_data)
 
     except Exception as ex:
         print('Exception:')
