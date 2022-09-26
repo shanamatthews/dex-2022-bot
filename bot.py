@@ -145,8 +145,8 @@ async def on_message(message):
     if (message.author.id != 446079130094534656) and (message.author.id != 949370490462564392):
         return
 
-    command, *middle, time = message.content.split()
     if command.startswith('$poll'):
+        command, *middle, time = message.content.split()
         poll_id = 0
         match time:
 
