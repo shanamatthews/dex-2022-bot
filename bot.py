@@ -141,7 +141,8 @@ async def on_ready():
 
 @ client.event
 async def on_message(message):
-    if message.author.id != 446079130094534656:  # only works for Shana's account
+    # only works for Shana & Ben's accounts
+    if (message.author.id != 446079130094534656) and (message.author.id != 949370490462564392):
         return
 
     command, *middle, time = message.content.split()
