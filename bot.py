@@ -68,7 +68,7 @@ Tabs (""" + custom_emojis["dexpurple"] + """) or Spaces(""" + custom_emojis["dex
     """What editor will you throw down for?
 Emacs (""" + custom_emojis["dexpurple"] + """)
 Vim (""" + custom_emojis["dexpink"] + """)
-JetBrains (""" + custom_emojis["dexred"] + """)
+Nano (""" + custom_emojis["dexred"] + """)
 Notepad (""" + custom_emojis["dexorange"] + """)""",
     """Best OS?
 Windows (""" + custom_emojis["dexpurple"] + """), MacOS (""" + custom_emojis["dexpink"] + """) or Linux (""" + custom_emojis["dexred"] + """)""",
