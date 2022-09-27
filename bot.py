@@ -145,9 +145,11 @@ async def on_message(message):
     if (message.author.id != 446079130094534656) and (message.author.id != 949370490462564392):
         return
 
-    if command.startswith('$poll'):
+    try:
         command, *middle, time = message.content.split()
-        poll_id = 0
+
+        if command.startswith('$poll'):
+            poll_id = 0
         match time:
 
             case "9am":
@@ -178,6 +180,8 @@ async def on_message(message):
 
         for react in this_poll_info['reactions'].keys():
             await sent_message.add_reaction(react)
+    except Exception as e:
+        print(e)
 
 
 @ client.event
