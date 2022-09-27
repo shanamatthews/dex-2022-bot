@@ -99,7 +99,7 @@ Silence (""" + custom_emojis["dexyellow"] + """)"""
 
 gist_data = [
     {"balls": []}, {"balls": []}, {"balls": []}, {
-        "balls": []}, {"balls": []}, {"balls": []}, {}, {"balls": []}
+        "balls": []}, {"balls": []}, {"balls": []}, {"balls": []}, {"balls": []}
 ]
 
 poll_message_info = [{"index": 0, "time": "intro", "sent": False, "reactions": {}, "text": messages[0], "balls": []},
@@ -190,6 +190,8 @@ async def on_raw_reaction_add(payload):
         emoji = payload.emoji.name
 
         poll_info = poll_message_ids_to_info[payload.message_id]
+        print(poll_message_ids_to_info)
+        print(poll_info)
         reactions = poll_info['reactions']
 
         full_emoji = custom_emojis[emoji]
