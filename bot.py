@@ -145,6 +145,9 @@ async def on_message(message):
     if (message.author.id != 446079130094534656) and (message.author.id != 949370490462564392):
         return
 
+    if not message.content.startswith("$"):
+        return
+
     try:
         command, *middle, time = message.content.split()
 
